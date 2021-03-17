@@ -7,7 +7,6 @@
         <b-col sm='6' offset='3'>
           <QuestionBox />
         </b-col>
-        
       </b-row>
     </b-container>
     
@@ -23,6 +22,14 @@ export default {
   components: {
     Header,
     QuestionBox 
+  },
+  mounted: function() {
+    fetch('https://opentdb.com/api.php?amount=10&category=27&type=multiple', {
+      method: 'get'
+    })
+    .then((response) => {
+      console.log(response.json())
+    })
   }
 }
 </script>

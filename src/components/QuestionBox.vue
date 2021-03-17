@@ -1,8 +1,6 @@
 <template>
     <div>
-        <b-jumbotron header="BootstrapVue" lead="Bootstrap v4 Components for Vue.js 2">
-             <template #header>BootstrapVue</template>
-
+        <b-jumbotron>
                 <template #lead>
                 Some question here?
                 </template>
@@ -18,3 +16,4 @@
         </b-jumbotron>
     </div>
 </template>
+             
