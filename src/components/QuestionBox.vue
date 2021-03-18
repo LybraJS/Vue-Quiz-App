@@ -19,7 +19,8 @@
 
                 <b-button
                 variant="primary"
-                v-on:click='submitAnswer'>
+                v-on:click='submitAnswer'
+                :disabled='selectedIndex === null'>
                     Submit
                 </b-button>
                 <b-button
@@ -44,19 +45,21 @@
         data() {
             return {
                 selectedIndex: null,
+                correctIndex:null,
                 shuffledAnswers: []
             }
         },
         watch: {
-            currentQuestion() {
-                this.selectedIndex = null
-                this.shuffleAnswers()
+            currentQuestion: {
+                immediate: true,
+                handler() {
+                    this.selectedIndex = null
+                    this.shuffleAnswers()
+                }
             }
+
         },
-        shuffleAnswers() {
-            let answers = [...this.currentQuestion.incirrect_answers, this.currentQuestions.correct_answer]
-            this.shuffleAnswers = _.shuffle(answers)
-        },
+        
         methods: {
             selectAnswer(index) {
                 this.selectedIndex = index
@@ -69,7 +72,12 @@
                 }
 
                 this.increment(isCorrect)
-            }
+            },
+            shuffleAnswers() {
+            let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer]
+            this.shuffledAnswers = _.shuffle(answers)
+            this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
+            },
         },
         computed: {
             answers() {
@@ -78,9 +86,6 @@
                 return answers
                
             }
-        },
-        mounted() {
-            this.shuffleAnswers()
         }
     }
 </script>

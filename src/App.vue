@@ -2,7 +2,8 @@
   <div id="app">
     <Header
     :numCorrect='numCorrect'
-    :numTotal='numTotal'/>
+    :numTotal='numTotal'
+    />
 
     <b-container class="bv-example-row">
       <b-row>
