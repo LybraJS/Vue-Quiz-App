@@ -8,13 +8,23 @@
                 <hr class="my-4">
 
                 <b-list-group>
-                    <b-list-group-item v-for='(answer, index) in answers' :key='index'>
+                    <b-list-group-item v-for='(answer, index) in answers'
+                    :key='index'
+                    @click.prevent='selectAnswer(index)'
+                    :class="[selectedIndex === index ? 'selected' : '']"
+                    >
                         {{answer}}
                     </b-list-group-item>
                 </b-list-group>
 
-                <b-button variant="primary" href="#">Submit</b-button>
-                <b-button @click='next' variant="success" href="#">
+                <b-button
+                variant="primary"
+                v-on:click='submitAnswer'>
+                    Submit
+                </b-button>
+                <b-button
+                @click='next'
+                variant="success">
                     Next
                 </b-button>
         </b-jumbotron>
@@ -22,13 +32,44 @@
 </template>
 
 <script>
+
+    import _ from 'lodash'
+
     export default {
         props: {
             currentQuestion: Object,
-            next: Function
+            next: Function,
+            increment: Function
         },
-        mounted () {
-            console.log(this.props.currentQuestion)
+        data() {
+            return {
+                selectedIndex: null,
+                shuffledAnswers: []
+            }
+        },
+        watch: {
+            currentQuestion() {
+                this.selectedIndex = null
+                this.shuffleAnswers()
+            }
+        },
+        shuffleAnswers() {
+            let answers = [...this.currentQuestion.incirrect_answers, this.currentQuestions.correct_answer]
+            this.shuffleAnswers = _.shuffle(answers)
+        },
+        methods: {
+            selectAnswer(index) {
+                this.selectedIndex = index
+            },
+            submitAnswer() {
+                let isCorrect = false
+
+                if (this.selectedIndex === this.correctIndex) {
+                    isCorrect = true
+                }
+
+                this.increment(isCorrect)
+            }
         },
         computed: {
             answers() {
@@ -37,6 +78,9 @@
                 return answers
                
             }
+        },
+        mounted() {
+            this.shuffleAnswers()
         }
     }
 </script>
@@ -46,8 +90,26 @@
     margin-bottom: 15px;
 }
 
+.list-group-item:hover {
+    background: #EEE;
+    cursor: pointer;
+    
+}
+
 .btn {
     margin: 0 5px;
+}
+
+.selected {
+    background-color: lightblue;
+}
+
+.correct {
+    background-color: lightgreen;
+}
+
+.incorrect {
+    background-color: red;
 }
 </style>
              
