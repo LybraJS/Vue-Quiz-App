@@ -109,6 +109,10 @@
     background-color: lightblue;
 }
 
+.selected:hover {
+    background-color: lightblue;
+}
+
 .correct {
     background-color: lightgreen;
 }
