@@ -11,7 +11,7 @@
                     <b-list-group-item v-for='(answer, index) in answers'
                     :key='index'
                     @click.prevent='selectAnswer(index)'
-                    :class="[selectedIndex === index ? 'selected' : '']"
+                    :class="answerClass(index)"
                     >
                         {{answer}}
                     </b-list-group-item>
@@ -20,7 +20,7 @@
                 <b-button
                 variant="primary"
                 v-on:click='submitAnswer'
-                :disabled='selectedIndex === null'>
+                :disabled='selectedIndex === null || answered'>
                     Submit
                 </b-button>
                 <b-button
@@ -45,8 +45,17 @@
         data() {
             return {
                 selectedIndex: null,
-                correctIndex:null,
-                shuffledAnswers: []
+                 correctIndex :null,
+                shuffledAnswers: [],
+                answered: false
+            }
+        },
+         computed: {
+            answers() {
+                let answers = [...this.currentQuestion.incorrect_answers]
+                answers.push(this.currentQuestion.correct_answer)
+                return answers
+               
             }
         },
         watch: {
@@ -54,6 +63,7 @@
                 immediate: true,
                 handler() {
                     this.selectedIndex = null
+                    this.answered = false
                     this.shuffleAnswers()
                 }
             }
@@ -70,6 +80,7 @@
                 if (this.selectedIndex === this.correctIndex) {
                     isCorrect = true
                 }
+                this.answered = true
 
                 this.increment(isCorrect)
             },
@@ -78,13 +89,19 @@
             this.shuffledAnswers = _.shuffle(answers)
             this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
             },
-        },
-        computed: {
-            answers() {
-                let answers = [...this.currentQuestion.incorrect_answers]
-                answers.push(this.currentQuestion.correct_answer)
-                return answers
-               
+            answerClass(index) {
+                let answerClass = ''
+
+                if (!this.answered && this.selectedIndex === index) {
+                    answerClass = 'selected'
+                } else if (this.answered && this.correctIndex === index) {
+                    answerClass = 'correct'
+                } else if (this.answered && this.selectedIndex === index && this.correctIndex !== index) {
+                    answerClass = 'incorrect'
+                }
+
+                return answerClass
+                
             }
         }
     }
